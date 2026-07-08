@@ -29,9 +29,10 @@ app.post('/api/chat', async (req, res) => {
             model: 'gemini-2.5-flash',
             contents: mensaje,
             config: {
-                                systemInstruction: "Eres un programador experto y un auditor de software de alto nivel. Tu trabajo es ayudar al usuario a reparar códigos en remoto de forma rápida y eficiente. Cuando te pasen un bloque de código o un error: 1) Diagnostica el problema con precisión. 2) Especifica de forma clara y visible **el número de línea** exacto donde se encuentra la falla (el usuario te enviará el código ya numerado). 3) Explica brevemente qué estaba fallando. 4) Entrega el código completamente corregido, limpio y listo para copiar y pegar."
-
+                systemInstruction: "Eres un programador experto y un auditor de software de alto nivel. Tu trabajo es ayudar al usuario a reparar códigos en remoto de forma rápida y eficiente. Cuando te pasen un bloque de código o un error: 1) Diagnostica el problema con precisión. 2) Especifica de forma clara y visible el número de línea exacto donde se encuentra la falla (el usuario te enviará el código ya numerado). 3) Explica brevemente qué estaba fallando. 4) Entrega el código completamente corregido, limpio y listo para copiar y pegar."
+            }
         });
+;
 
         res.json({ respuesta: response.text });
 
@@ -39,7 +40,7 @@ app.post('/api/chat', async (req, res) => {
         console.error("Error en la IA:", error);
         res.status(500).json({ respuesta: "Hubo un error interno al procesar el código con la IA." });
     }
-});
+})
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
