@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente de Código</title>
+    <title>Asistente de Código con Voz</title>
     <style>
         body { background-color: #121212; color: white; font-family: sans-serif; padding: 20px; }
         .chat-container { max-width: 600px; margin: auto; }
         textarea { width: 100%; height: 150px; background: #1e1e1e; color: white; border: 1px solid #333; padding: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #00c853; border: none; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button { width: 100%; padding: 15px; border: none; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-enviar { background: #00c853; }
+        .btn-micro { background: #0288d1; }
         .respuesta { margin-top: 20px; padding: 15px; background: #1e1e1e; border-left: 5px solid #00c853; min-height: 50px; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
 <div class="chat-container">
-    <h2>Asistente de Voz</h2>
-    <textarea id="mensaje" placeholder="Pega tu código aquí para repararlo..."></textarea>
-    <button onclick="enviarMensaje()">Preguntar a la IA</button>
+    <h2>Asistente de Voz & Código</h2>
+    <textarea id="mensaje" placeholder="Pega tu código o presiona el micrófono para dictar..."></textarea>
+    
+    <button class="btn-micro" onclick="activarMicrofono()">🎙️ Activar Micrófono</button>
+    <button class="btn-enviar" onclick="enviarMensaje()">Preguntar a la IA</button>
 
     <div class="respuesta" id="respuestaBox">
         <em>La respuesta de la IA aparecerá aquí...</em>
@@ -25,11 +29,45 @@
 </div>
 
 <script>
+    // Configuración del Reconocimiento de Voz nativo del teléfono
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let reconocimiento;
+
+    if (Recognition) {
+        reconocimiento = new Recognition();
+        reconocimiento.lang = 'es-ES'; // Idioma español
+        reconocimiento.continuous = false; // Se detiene cuando haces una pausa larga
+        reconocimiento.interimResults = false;
+
+        reconocimiento.onstart = () => {
+            document.getElementById('respuestaBox').innerHTML = "<em>🎙️ Escuchando tu voz... Habla ahora.</em>";
+        };
+
+        reconocimiento.onresult = (event) => {
+            const resultadoTexto = event.results[0][0].transcript;
+            document.getElementById('mensaje').value = resultadoTexto;
+            document.getElementById('respuestaBox').innerHTML = "<em>✓ Voz convertida a texto con éxito.</em>";
+        };
+
+        reconocimiento.onerror = (event) => {
+            console.error(event.error);
+            document.getElementById('respuestaBox').innerHTML = "<span style='color: #ff5252;'>Error en el micrófono: " + event.error + "</span>";
+        };
+    }
+
+    function activarMicrofono() {
+        if (!reconocimiento) {
+            alert("Tu navegador o teléfono no soporta reconocimiento de voz nativo.");
+            return;
+        }
+        reconocimiento.start();
+    }
+
     async function enviarMensaje() {
         const textoArea = document.getElementById('mensaje').value;
         
         if(!textoArea.trim()) {
-            alert("Por favor, escribe un mensaje primero.");
+            alert("Por favor, escribe o dicta un mensaje primero.");
             return;
         }
 
@@ -60,10 +98,3 @@
 
 </body>
 </html>
-            respuestaBox.innerText = data.respuesta || "No se recibió respuesta.";
-            
-        } catch (error) {
-            console.error(error);
-            respuestaBox.innerHTML = "<span style='color: #ff5252;'>Error al conectar con el servidor.</span>";
-        }
-
