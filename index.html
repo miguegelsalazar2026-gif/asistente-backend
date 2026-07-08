@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Asistente IA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 400px;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h2 { color: #00e676; margin-top: 0; }
+        textarea {
+            width: 100%;
+            height: 80px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            background: #00e676;
+            color: #121212;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #00b359; }
+        .respuesta {
+            margin-top: 20px;
+            padding: 10px;
+            background: #2d2d2d;
+            border-left: 4px solid #00e676;
+            text-align: left;
+            border-radius: 4px;
+            min-height: 40px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <h2>Asistente de Voz</h2>
+    <textarea id="mensaje" placeholder="Escribe tu pregunta para Gemini aquí..."></textarea>
+    <button onclick="enviarMensaje()">Preguntar a la IA</button>
+    
+    <div class="respuesta" id="respuestaBox">
+        <em>La respuesta de la IA aparecerá aquí...</em>
+    </div>
+</div>
+
+<script>
+    async function enviarMensaje() {
+        const texto = document.getElementById('mensaje').value;
+        const respuestaBox = document.getElementById('respuestaBox');
+        
+        if(!texto.trim()) {
+            alert("Por favor, escribe un mensaje primero.");
+            return;
+        }
+        
+        respuestaBox.innerHTML = "<em>Pensando...</em>";
+        
+        try {
+            // Aquí conectamos con tu servidor de Render recién creado
+            const response = await fetch('https://asistente-backend-8zka.onrender.com/preguntar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mensaje: texto })
+            });
+            
+            const data = await response.json();
+            respuestaBox.innerText = data.respuesta || "No se recibió respuesta.";
+            
+        } catch (error) {
+            console.error(error);
+            respuestaBox.innerHTML = "<span style='color: #ff5252;'>Error al conectar con el servidor.</span>";
+        }
+    }
+</script>
+
+</body>
+  </html>
+  
