@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente de Código con Voz</title>
+    <title>CodeFix AI - Auditoría Remota</title>
+    
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/711/711284.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/711/711284.png">
+    
     <style>
         body { background-color: #121212; color: white; font-family: sans-serif; padding: 20px; }
         .chat-container { max-width: 600px; margin: auto; }
@@ -17,7 +21,8 @@
 <body>
 
 <div class="chat-container">
-    <h2>Asistente de Voz & Código</h2>
+    <h2>CodeFix AI 🛠️</h2>
+    <p style="color: #aaa; font-size: 14px; margin-top: -10px;">Estación de Diagnóstico de Software Remoto</p>
     <textarea id="mensaje" placeholder="Pega tu código o presiona el micrófono para dictar..."></textarea>
     
     <button class="btn-micro" onclick="activarMicrofono()">🎙️ Activar Micrófono</button>
@@ -29,14 +34,13 @@
 </div>
 
 <script>
-    // Configuración del Reconocimiento de Voz nativo del teléfono
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let reconocimiento;
 
     if (Recognition) {
         reconocimiento = new Recognition();
-        reconocimiento.lang = 'es-ES'; // Idioma español
-        reconocimiento.continuous = false; // Se detiene cuando haces una pausa larga
+        reconocimiento.lang = 'es-ES';
+        reconocimiento.continuous = false;
         reconocimiento.interimResults = false;
 
         reconocimiento.onstart = () => {
