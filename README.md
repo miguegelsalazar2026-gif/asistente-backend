@@ -39,4 +39,3 @@ Esta herramienta fue desarrollada con el objetivo de servir como un recurso de p
 ## 👤 Desarrollador
 * **Nombre:** Miguel Ángel Salazar
 * **Rol:** Desarrollador Backend Node.js & Integrador de Soluciones de IA
-* **LinkedIn:** [Tu enlace de LinkedIn aquí si ya lo tienes]
